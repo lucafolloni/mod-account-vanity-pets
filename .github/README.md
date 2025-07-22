@@ -8,3 +8,6 @@ The module's objective is to go through the list of characters on an account (wh
  - Latest build status with azerothcore:
  
  [![Build Status](https://github.com/lucafolloni/mod-account-vanity-pets/workflows/core-build/badge.svg?branch=main&event=push)](https://github.com/lucafolloni/mod-account-vanity-pets)
+
+
+Based on the work from [azerothcore/mod-account-mounts](https://github.com/azerothcore/mod-account-mounts)
