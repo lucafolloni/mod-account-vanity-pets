@@ -16,3 +16,9 @@ Account.VanityPets.Announce = 0
 # Account.VanityPets.ExcludedSpellIDs = 470,578,6777
 
 Account.VanityPets.ExcludedSpellIDs = 0
+
+# Limit account-wide sharing by faction? (1: true | 0: false)
+# 0 = share pets between all characters regardless of faction
+# 1 = share pets only between characters of the same faction
+
+Account.VanityPets.LimitRace = 0

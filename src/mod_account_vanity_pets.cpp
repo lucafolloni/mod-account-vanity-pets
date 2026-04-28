@@ -8,7 +8,7 @@
 
 class AccountVanityPets : public PlayerScript
 {
-    static const bool limitrace = true; // This set to true will only learn mounts from chars on the same team, do what you want.
+    bool limitrace; // Boolean to hold limit race option
     std::set<uint32> excludedSpellIds; // Set to hold the Spell IDs to be excluded
 
 public:
@@ -16,6 +16,8 @@ public:
         PLAYERHOOK_ON_LOGIN
     })
     {
+        // Retrieve limitrace option from the config file
+        limitrace = sConfigMgr->GetOption<bool>("Account.VanityPets.LimitRace", false);
         // Retrieve the string of excluded Spell IDs from the config file
         std::string excludedSpellsStr = sConfigMgr->GetOption<std::string>("Account.VanityPets.ExcludedSpellIDs", "");
         // Proceed only if the configuration is not "0" or empty, indicating exclusions are specified
@@ -31,7 +33,7 @@ public:
             }
         }
     }
-    
+
     void OnPlayerLogin(Player* pPlayer)
     {
         if (sConfigMgr->GetOption<bool>("Account.VanityPets.Enable", true))
@@ -41,7 +43,7 @@ public:
 
             std::vector<uint32> Guids;
             uint32 playerAccountID = pPlayer->GetSession()->GetAccountId();
-            QueryResult result1 = CharacterDatabase.Query("SELECT `guid` FROM `characters` WHERE `account`={};", playerAccountID);
+            QueryResult result1 = CharacterDatabase.Query("SELECT `guid`, `race` FROM `characters` WHERE `account`={};", playerAccountID);
 
             if (!result1)
                 return;
@@ -49,7 +51,10 @@ public:
             do
             {
                 Field* fields = result1->Fetch();
-                Guids.push_back(fields[0].Get<uint32>());
+                uint32 race = fields[1].Get<uint8>();
+
+                if ((Player::TeamIdForRace(race) == Player::TeamIdForRace(pPlayer->getRace())) || !limitrace)
+                    Guids.push_back(fields[0].Get<uint32>());
 
             } while (result1->NextRow());
 
